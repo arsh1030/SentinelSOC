@@ -1,0 +1,25 @@
+{
+  "dataset": "SYNTHETIC",
+  "windows": 1800,
+  "attack_rate": 0.03,
+  "MAD_SIGMA": 3.5,
+  "AGREEMENT_FRACTION": 0.5,
+  "MIN_MARGIN": 0.2,
+  "WEIGHTS": {
+    "iforest": 0.1,
+    "lof": 0.1,
+    "ecod": 0.3,
+    "copod": 0.4,
+    "lstm": 0.1
+  },
+  "measured": {
+    "level": "entity",
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "window_recall": 0.16666666666666666,
+    "consensus_pr_auc": 0.9663341881406233,
+    "best_single_detector": "copod",
+    "best_single_pr_auc": 1.0
+  }
+}

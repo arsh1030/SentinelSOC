@@ -1,0 +1,15 @@
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+pydantic==2.11.3
+python-multipart==0.0.20
+python-dotenv==1.1.0
+pandas==2.2.3
+numpy==2.2.5
+scikit-learn==1.6.1
+scipy>=1.14
+pyod>=2.0
+torch>=2.5
+drain3==0.9.11
+jinja2==3.1.6
+falkordb==1.8.0
+falkordblite==0.10.0

@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+/* ─── Typefaces ────────────────────────────────────────────────────────────
+   Shipped with the app rather than fetched from a CDN: the dashboard has to
+   render identically with the network unplugged, same as the cached demo run. */
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('/fonts/Manrope/Manrope-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Iosevka Charon';
+  src: url('/fonts/Iosevka_Charon/IosevkaCharon-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Iosevka Charon';
+  src: url('/fonts/Iosevka_Charon/IosevkaCharon-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Iosevka Charon';
+  src: url('/fonts/Iosevka_Charon/IosevkaCharon-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* ─── Design tokens ────────────────────────────────────────────────────────
+   LogGuard's language: a monochrome console where the only saturated colour
+   is severity. Nothing else competes with it, so a critical row is the first
+   thing the eye lands on. */
+
+@theme {
+  --color-bg:            #000000;
+  --color-surface:       #0a0a0a;
+  --color-surface-1:     #111111;
+  --color-surface-2:     #1a1a1a;
+  --color-surface-3:     #222222;
+
+  --color-line:          #333333;
+  --color-line-strong:   #666666;
+
+  --color-ink:           #ffffff;
+  --color-ink-1:         #e0e0e0;
+  --color-ink-2:         #a0a0a0;
+  --color-ink-3:         #666666;
+
+  --color-critical:      #ff3333;
+  --color-high:          #ff6600;
+  --color-medium:        #ffff33;
+  --color-low:           #33ff33;
+
+  --font-sans:  'Manrope', system-ui, -apple-system, sans-serif;
+  --font-mono:  'Iosevka Charon', ui-monospace, Menlo, monospace;
+}
+
+/* ─── Base ─────────────────────────────────────────────────────────────────
+   Committed to a single dark world, so no theme media queries - but every
+   colour is still painted explicitly rather than inherited from the host. */
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection { background: rgba(255,255,255,.16); color: #fff; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,.2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.4); }
+
+:focus-visible {
+  outline: 2px solid rgba(255,255,255,.6);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* ─── Motion ───────────────────────────────────────────────────────────────
+   Used only where it carries meaning: a pulsing dot marks a live critical. */
+
+@keyframes fadeIn  { from { opacity: 0 }               to { opacity: 1 } }
+@keyframes slideIn { from { opacity: 0; transform: translateY(-8px) } to { opacity: 1; transform: none } }
+@keyframes sweep   { from { transform: translateX(-100%) } to { transform: translateX(300%) } }
+@keyframes pulse   { 0%, 100% { opacity: 1 } 50% { opacity: .3 } }
+
+.anim-fade  { animation: fadeIn .18s ease-out both; }
+.anim-slide { animation: slideIn .22s ease-out both; }
+.anim-sweep::after {
+  content: ""; position: absolute; inset: 0 auto 0 0; width: 33%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+  animation: sweep 1.1s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Console primitives ───────────────────────────────────────────────────
+   LogGuard's chip: a hairline border, a 10% wash, the colour as text. Applied
+   through data-sev so severity is one attribute, not four class branches. */
+
+.chip {
+  display: inline-flex; align-items: center; gap: .375rem;
+  padding: .125rem .5rem; border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  border: 1px solid; backdrop-filter: blur(4px); white-space: nowrap;
+}
+.chip[data-sev="critical"] { color: var(--color-critical); border-color: rgb(255 51 51 / .3);  background: rgb(255 51 51 / .1); }
+.chip[data-sev="high"]     { color: var(--color-high);     border-color: rgb(255 102 0 / .3);  background: rgb(255 102 0 / .1); }
+.chip[data-sev="medium"]   { color: var(--color-medium);   border-color: rgb(255 255 51 / .3); background: rgb(255 255 51 / .1); }
+.chip[data-sev="low"]      { color: var(--color-low);      border-color: rgb(51 255 51 / .3);  background: rgb(51 255 51 / .1); }
+.chip[data-sev="none"]     { color: var(--color-ink-2);    border-color: rgb(255 255 255 / .15); background: rgb(255 255 255 / .05); }
+
+.glass {
+  background: rgb(10 10 10 / .8);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgb(255 255 255 / .07);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .16em;
+  color: var(--color-ink-3);
+}
+
+.rail { position: relative; }
+.rail::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: currentColor; opacity: .5;
+}
